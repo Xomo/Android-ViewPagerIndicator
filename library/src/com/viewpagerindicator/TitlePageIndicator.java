@@ -17,7 +17,6 @@
  */
 package com.viewpagerindicator;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -35,6 +34,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import java.util.ArrayList;
 
 /**
  * A TitlePageIndicator is a PageIndicator which displays the title of left view
@@ -107,7 +108,9 @@ public class TitlePageIndicator extends View implements PageIndicator {
     private float mFooterPadding;
     private float mTitlePadding;
     private float mTopPadding;
-    /** Left and right side padding for not active view titles. */
+    /**
+     * Left and right side padding for not active view titles.
+     */
     private float mClipPadding;
     private float mFooterLineHeight;
 
@@ -317,7 +320,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
         //Make sure we're on a page that still exists
         if (mCurrentPage >= bounds.size()) {
-            setCurrentItem(bounds.size()-1);
+            setCurrentItem(bounds.size() - 1);
         }
 
         final int countMinusOne = count - 1;
@@ -374,7 +377,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
         }
         //Right views starting from the current position
         if (mCurrentPage < countMinusOne) {
-            for (int i = mCurrentPage + 1 ; i < count; i++) {
+            for (int i = mCurrentPage + 1; i < count; i++) {
                 RectF bound = bounds.get(i);
                 //If right side is outside the screen
                 if (bound.right > rightClip) {
@@ -403,13 +406,20 @@ public class TitlePageIndicator extends View implements PageIndicator {
                 mPaintText.setFakeBoldText(currentPage && currentBold && mBoldText);
 
                 //Draw text as unselected
-                mPaintText.setColor(mColorText);
+                Integer customColor = mTitleProvider.getTitleColor(i);
+                if (customColor != null) {
+                    mPaintText.setColor(getResources().getColor(customColor));
+                } else {
+                    mPaintText.setColor(mColorText);
+                }
                 canvas.drawText(mTitleProvider.getTitle(i), bound.left, bound.bottom + mTopPadding, mPaintText);
 
                 //If we are within the selected bounds draw the selected text
                 if (currentPage && currentSelected) {
-                    mPaintText.setColor(mColorSelected);
-                    mPaintText.setAlpha((int)((mColorSelected >>> 24) * selectedPercent));
+                    if (customColor == null) {
+                        mPaintText.setColor(mColorSelected);
+                    }
+                    mPaintText.setAlpha((int) ((mColorSelected >>> 24) * selectedPercent));
                     canvas.drawText(mTitleProvider.getTitle(i), bound.left, bound.bottom + mTopPadding, mPaintText);
                 }
             }
@@ -439,13 +449,13 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
                 RectF underlineBounds = bounds.get(page);
                 mPath = new Path();
-                mPath.moveTo(underlineBounds.left  - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
+                mPath.moveTo(underlineBounds.left - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
                 mPath.lineTo(underlineBounds.right + mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
                 mPath.lineTo(underlineBounds.right + mFooterIndicatorUnderlinePadding, height - mFooterLineHeight - mFooterIndicatorHeight);
-                mPath.lineTo(underlineBounds.left  - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight - mFooterIndicatorHeight);
+                mPath.lineTo(underlineBounds.left - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight - mFooterIndicatorHeight);
                 mPath.close();
 
-                mPaintFooterIndicator.setAlpha((int)(0xFF * selectedPercent));
+                mPaintFooterIndicator.setAlpha((int) (0xFF * selectedPercent));
                 canvas.drawPath(mPath, mPaintFooterIndicator);
                 mPaintFooterIndicator.setAlpha(0xFF);
                 break;
@@ -543,15 +553,15 @@ public class TitlePageIndicator extends View implements PageIndicator {
         }
 
         return true;
-    };
+    }
+
+    ;
 
     /**
      * Set bounds for the right textView including clip padding.
      *
-     * @param curViewBound
-     *            current bounds.
-     * @param curViewWidth
-     *            width of the view.
+     * @param curViewBound current bounds.
+     * @param curViewWidth width of the view.
      */
     private void clipViewOnTheRight(RectF curViewBound, float curViewWidth, int right) {
         curViewBound.right = right - mClipPadding;
@@ -561,10 +571,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
     /**
      * Set bounds for the left textView including clip padding.
      *
-     * @param curViewBound
-     *            current bounds.
-     * @param curViewWidth
-     *            width of the view.
+     * @param curViewBound current bounds.
+     * @param curViewWidth width of the view.
      */
     private void clipViewOnTheLeft(RectF curViewBound, float curViewWidth, int left) {
         curViewBound.left = left + mClipPadding;
@@ -624,7 +632,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
         }
         mViewPager = view;
         mViewPager.setOnPageChangeListener(this);
-        mTitleProvider = (TitleProvider)adapter;
+        mTitleProvider = (TitleProvider) adapter;
         invalidate();
     }
 
@@ -708,8 +716,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
     /**
      * Determines the width of this view
      *
-     * @param measureSpec
-     *            A measureSpec packed into an int
+     * @param measureSpec A measureSpec packed into an int
      * @return The width of the view, honoring constraints from measureSpec
      */
     private int measureWidth(int measureSpec) {
@@ -717,7 +724,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
-        if (specMode != MeasureSpec.EXACTLY) {
+        if (measureSpec != 0 && specMode != MeasureSpec.EXACTLY) {
             throw new IllegalStateException(getClass().getSimpleName() + " can only be used in EXACTLY mode.");
         }
         result = specSize;
@@ -727,8 +734,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
     /**
      * Determines the height of this view
      *
-     * @param measureSpec
-     *            A measureSpec packed into an int
+     * @param measureSpec A measureSpec packed into an int
      * @return The height of the view, honoring constraints from measureSpec
      */
     private int measureHeight(int measureSpec) {
@@ -742,18 +748,18 @@ public class TitlePageIndicator extends View implements PageIndicator {
         } else {
             //Calculate the text bounds
             RectF bounds = new RectF();
-            bounds.bottom = mPaintText.descent()-mPaintText.ascent();
+            bounds.bottom = mPaintText.descent() - mPaintText.ascent();
             result = bounds.bottom - bounds.top + mFooterLineHeight + mFooterPadding + mTopPadding;
             if (mFooterIndicatorStyle != IndicatorStyle.None) {
                 result += mFooterIndicatorHeight;
             }
         }
-        return (int)result;
+        return (int) result;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        SavedState savedState = (SavedState)state;
+        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
         mCurrentPage = savedState.currentPage;
         requestLayout();

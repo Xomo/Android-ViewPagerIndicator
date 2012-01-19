@@ -25,4 +25,5 @@ public interface TitleProvider {
      * @return
      */
     public String getTitle(int position);
+    public Integer getTitleColor(int position);
 }

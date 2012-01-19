@@ -44,5 +44,10 @@ public class SampleTabsDefault extends BaseSampleActivity {
 		public String getTitle(int position) {
 			return SampleTabsDefault.CONTENT[position % SampleTabsDefault.CONTENT.length].toUpperCase();
 		}
-	}
+
+        @Override
+        public Integer getTitleColor(int position) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
 }

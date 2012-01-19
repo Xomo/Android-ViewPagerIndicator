@@ -12,4 +12,9 @@ class TestTitleFragmentAdapter extends TestFragmentAdapter implements TitleProvi
 	public String getTitle(int position) {
 		return TestFragmentAdapter.CONTENT[position % CONTENT.length];
 	}
+
+    @Override
+    public Integer getTitleColor(int position) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
