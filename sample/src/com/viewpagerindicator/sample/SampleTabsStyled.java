@@ -8,7 +8,7 @@ import com.viewpagerindicator.sample.R;
 import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
-public class SampleTabsDefault extends BaseSampleActivity {
+public class SampleTabsStyled extends BaseSampleActivity {
 	private static final String[] CONTENT = new String[] { "Recent", "Artists", "Albums", "Songs", "Playlists", "Genres" };
 	
 	@Override
@@ -32,22 +32,17 @@ public class SampleTabsDefault extends BaseSampleActivity {
 
 		@Override
 		public Fragment getItem(int position) {
-			return TestFragment.newInstance(SampleTabsDefault.CONTENT[position % SampleTabsDefault.CONTENT.length]);
+			return TestFragment.newInstance(SampleTabsStyled.CONTENT[position % SampleTabsStyled.CONTENT.length]);
 		}
 
 		@Override
 		public int getCount() {
-			return SampleTabsDefault.CONTENT.length;
+			return SampleTabsStyled.CONTENT.length;
 		}
 
 		@Override
 		public String getTitle(int position) {
-			return SampleTabsDefault.CONTENT[position % SampleTabsDefault.CONTENT.length].toUpperCase();
+			return SampleTabsStyled.CONTENT[position % SampleTabsStyled.CONTENT.length].toUpperCase();
 		}
-
-        @Override
-        public Integer getTitleColor(int position) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
-        }
-    }
+	}
 }

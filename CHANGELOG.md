@@ -1,7 +1,22 @@
 Change Log
 ==========
 
-Version 2.2.0 *(2012-12-13)*
+Version 2.2.2 *(2011-12-31)*
+----------------------------
+
+ * Fix incorrect `R.java` imports in all of the sample activities.
+
+
+Version 2.2.1 *(2011-12-31)*
+----------------------------
+
+ * New `setTypeface(Typeface)` and `getTypeface()` methods for title indicator.
+   (Thanks Dimitri Fedorov)
+ * Added styled tab indicator sample.
+ * Support for widths other than those that could be measured exactly.
+
+
+Version 2.2.0 *(2011-12-13)*
 ----------------------------
 
  * Default title indicator style is now 'underline'.
