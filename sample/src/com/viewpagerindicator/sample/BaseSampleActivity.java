@@ -2,13 +2,13 @@ package com.viewpagerindicator.sample;
 
 import java.util.Random;
 
+import android.support.v4.view.Menu;
+import android.support.v4.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.R;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 public abstract class BaseSampleActivity extends FragmentActivity {
@@ -26,21 +26,18 @@ public abstract class BaseSampleActivity extends FragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.random:
+		if (item.getItemId() == R.id.random) {
 				final int page = RANDOM.nextInt(mAdapter.getCount());
 				Toast.makeText(this, "Changing to page " + page, Toast.LENGTH_SHORT);
 				mPager.setCurrentItem(page);
 				return true;
-				
-			case R.id.add_page:
+        } else if (item.getItemId() == R.id.add_page) {
 				if (mAdapter.getCount() < 10) {
 					mAdapter.setCount(mAdapter.getCount() + 1);
 					mIndicator.notifyDataSetChanged();
 				}
 				return true;
-				
-			case R.id.remove_page:
+        } else if (item.getItemId() == R.id.remove_page) {
 				if (mAdapter.getCount() > 1) {
 					mAdapter.setCount(mAdapter.getCount() - 1);
 					mIndicator.notifyDataSetChanged();
